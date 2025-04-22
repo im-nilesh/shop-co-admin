@@ -16,14 +16,14 @@ import Person2Icon from "@mui/icons-material/Person2";
 
 const drawerWidth = 240;
 
-const Sidebar = () => {
+const Sidebar = ({ onMenuSelect }) => {
   const sections = [
     {
       title: "Overview",
       items: [
         { label: "Dashboard", icon: <DashboardIcon /> },
         { label: "Products", icon: <ProductionQuantityLimitsIcon /> },
-        { label: "Caterogy", icon: <CategoryIcon /> },
+        { label: "Category", icon: <CategoryIcon /> },
       ],
     },
     {
@@ -46,14 +46,12 @@ const Sidebar = () => {
         },
       }}
     >
-      {/* Branding title */}
       <Box sx={{ p: 2 }}>
         <Typography variant="h6" fontWeight="bold">
           ByeWind
         </Typography>
       </Box>
 
-      {/* Sections */}
       {sections.map((section, index) => (
         <Box key={index}>
           <Divider />
@@ -70,6 +68,7 @@ const Sidebar = () => {
                 <Button
                   startIcon={item.icon}
                   fullWidth
+                  onClick={() => onMenuSelect(item.label)} // Trigger screen switch
                   sx={{
                     justifyContent: "flex-start",
                     padding: "10px 16px",
