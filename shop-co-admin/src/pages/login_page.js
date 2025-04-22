@@ -1,7 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, TextField, Typography, Paper, Grid } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../services/firebase"; // Ensure this import is correct
 
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(""); // Clear previous errors
+
+    try {
+      // Authenticate user with Firebase Authentication
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/admin"); // Redirect to AdminPanel on success
+    } catch (err) {
+      console.error("Login error:", err); // Log the error details
+      setError("Invalid email or password. Please try again.");
+    }
+  };
+
   return (
     <Grid
       container
@@ -17,13 +39,20 @@ const LoginPage = () => {
           <Typography variant="h5" align="center" gutterBottom>
             Admin Login
           </Typography>
-          <Box component="form" noValidate autoComplete="off">
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+            onSubmit={handleLogin}
+          >
             <TextField
               fullWidth
               label="Email"
               variant="outlined"
               margin="normal"
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               fullWidth
@@ -31,12 +60,24 @@ const LoginPage = () => {
               variant="outlined"
               margin="normal"
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
+            {error && (
+              <Typography
+                color="error"
+                variant="body2"
+                style={{ marginTop: "8px" }}
+              >
+                {error}
+              </Typography>
+            )}
             <Button
               fullWidth
               variant="contained"
               color="primary"
               style={{ marginTop: "16px" }}
+              type="submit"
             >
               Login
             </Button>
